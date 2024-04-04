@@ -7,6 +7,11 @@ const app = express()
 
 const Subscriber = require('./models/subscribers');
 
+
+app.get('/', (req, res) => {
+    res.redirect('/subscreibers');
+});
+
 // Route to get all subscribers
 app.get('/subscribers', async (req, res) => {
         const subscribers = await Subscriber.find();
