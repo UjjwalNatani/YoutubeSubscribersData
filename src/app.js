@@ -26,6 +26,10 @@ async function connectToDatabase() {
 }
 
 function startServer(collection) {
+    app.get('/', async (req, res) => {
+        res.end("Hello");
+    });
+
     // Route to get all subscribers
     app.get('/subscribers', async (req, res) => {
         try {
