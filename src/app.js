@@ -5,8 +5,7 @@ const app = express()
 
 // Your code goes here
 
-// const Subscriber = require('./models/subscribers');
-const Subscriber = require('./data');
+const Subscriber = require('./models/subscribers');
 
 
 app.get('/', (req, res) => {
