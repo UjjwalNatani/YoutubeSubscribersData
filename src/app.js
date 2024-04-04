@@ -15,10 +15,9 @@ app.get('/', (req, res) => {
 
 // Route to get all subscribers
 app.get('/subscribers', async (req, res) => {
-        // const subscribers = await Subscriber.find();
-        res.end('Hello')
-        // res.json(subscribers);
-        // res.status(500);
+        const subscribers = await Subscriber.find();
+        res.json(subscribers);
+        res.status(500);
 });
 
 // Route to get subscribers' names and subscribed channels
