@@ -9,7 +9,8 @@ const Subscriber = require('./models/subscribers');
 
 
 app.get('/', (req, res) => {
-    res.redirect('/subscribers');
+    // res.redirect('/subscribers');
+    res.end('Hello')
 });
 
 // Route to get all subscribers
