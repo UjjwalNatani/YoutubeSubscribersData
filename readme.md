@@ -21,12 +21,12 @@ The project consists of the following components:
 ### Setup Instructions:
 To run the project locally, follow these steps:
 
-Install MongoDB and Node.js on your system.
-Clone this repository to your local machine.
-Install dependencies by running npm install.
-Run node src/createDatabase.js to set up the database and insert sample data.
-Start the server by running node src/index.js.
-Access the defined endpoints (/subscribers, /subscribers/names, /subscribers/:id) to interact with the application.
+- **Install MongoDB and Node.js on your system.**
+- **Clone this repository to your local machine.**
+- **Install dependencies by running npm install.**
+- **Run node src/createDatabase.js to set up the database and insert sample data.**
+- **Start the server by running node src/index.js.**
+- **Access the defined endpoints (/subscribers, /subscribers/names, /subscribers/:id) to interact with the application.**
 
 ### Technologies Used:
 - **Node.js**
