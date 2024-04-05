@@ -1,70 +1,51 @@
+const express = require("express");
+const app = express();
+const subscriberModel = require("./models/subscribers");
 
-const express = require('express');
-const app = express()
+app.use(express.json());
 
+// Display the written message on the homepage to the client.
+app.get("/", (req, res) => {
+  res.json("Hello User!");
+});
 
-// Your code goes here
-const { MongoClient } = require('mongodb');
-const { ObjectId } = require('mongodb');
-const uri = "mongodb+srv://ujjwalnatani10:Pbmp@1444@youtubesubscriberdata.sjib2vf.mongodb.net/?retryWrites=true&w=majority&appName=YoutubeSubscriberData";
+// 1. Get an array of all subscribers from the database
+app.get("/subscribers", async (req, res) => {
+  const subscribers = await subscriberModel.find().select("-__v");
+  res.json(subscribers);
+});
 
-async function connectToDatabase() {
-    const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+// 2. Get an array of subscriber's name and subscribed channel from the database
+app.get("/subscribers/names", async (req, res) => {
+  const subscribers = await subscriberModel
+    .find()
+    .select("-_id -subscribedDate -__v");
+  res.json(subscribers);
+});
 
-    try {
-        await client.connect();
-        console.log("Connected to MongoDB Atlas");
+// 3. Get a particular subscriber from the database using _id
+app.get("/subscribers/:id", async (req, res) => {
+  const id = req.params.id;
 
-        const database = client.db("youtubeUsers");
-        const collection = database.collection("userdata");
-
-        // Start the server after successful connection
-        startServer(collection);
-    } catch (error) {
-        console.error("Error connecting to MongoDB:", error);
-    }
-}
-
-function startServer(collection) {
-    app.get('/', async (req, res) => {
-        res.end("Hello");
+  await subscriberModel
+    .findById(id)
+    .select("-__v")
+    .then((data) => {
+      if (!data) {
+        // When the subscriber is not found for the given id.
+        error = Error(`Subscriber doesn't exist with the given _id: ${id}.`);
+        res.status(400).json({ message: error.message });
+      } else {
+        res.json(data);
+      }
+    })
+    .catch((error) => {
+      // When the id is not entered in the correct format.
+      res.status(400).json({
+        message: `Subscriber doesn't exist with the given _id: ${id}.`,
+      });
     });
+});
 
-    // Route to get all subscribers
-    app.get('/subscribers', async (req, res) => {
-        try {
-            const subscribers = await collection.find().toArray();
-            res.json(subscribers);
-        } catch (error) {
-            res.status(400).json({ message: error.message });
-        }
-    });
-
-    // Route to get subscribers' names and subscribed channels
-    app.get('/subscribers/names', async (req, res) => {
-        try {
-            const subscribers = await collection.find({}, { projection: { _id: 0, name: 1, subscribedChannel: 1 } }).toArray();
-            res.json(subscribers);
-        } catch (error) {
-            res.status(400).json({ message: error.message });
-        }
-    });
-
-    // Route to get a subscriber by ID
-    app.get('/subscribers/:id', async (req, res) => {
-        try {
-            // Convert the hexadecimal string to a MongoDB ObjectID
-            const objectId = new ObjectId(req.params.id);
-
-            const subscriber = await collection.findOne({ _id: objectId });
-            res.json(subscriber);
-        } catch (error) {
-            res.status(400).json({ message: error.message });
-        }
-    });
-}
-
-// Connect to the database and start the server
-connectToDatabase();
 
 module.exports = app;
